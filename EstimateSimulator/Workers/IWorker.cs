@@ -65,6 +65,14 @@ namespace EstimateSimulator.Workers
                     var t = _queue.Dequeue();
                     int error = t.RealTime - t.EstimatedTime;
                     Stats.ErrorList.Add(error);
+                    if (error > 10000)
+                    {
+
+                    }
+                    if (_queue.Count == 0)
+                    {
+                        IsWorking = false;
+                    }
                 }
             }
     
@@ -90,15 +98,24 @@ namespace EstimateSimulator.Workers
             {
                 sum += (task.EstimatedTime - task.ElapsedTime);
             }
+
+
             return sum;
         }
 
         public BasicWorker(int id, int amountOfWork)
         {
+            IsWorking = false;
             WorkerId = id;
             _queue = new Queue<ITask>();
             Stats = new WorkerStats();
             _workValue = amountOfWork;
+        }
+
+        public override string ToString()
+        {
+            string t = string.Format("Worker_{0} Queue: {1} {2}", WorkerId, _queue.Count, Stats.ToString());
+            return t;
         }
     }
 }

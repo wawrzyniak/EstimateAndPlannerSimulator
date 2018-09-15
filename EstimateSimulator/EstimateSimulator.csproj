@@ -53,6 +53,7 @@
     <Compile Include="Manager\ManagerConfig.cs" />
     <Compile Include="Planner\IPlan.cs" />
     <Compile Include="Planner\IPlanner.cs" />
+    <Compile Include="Planner\SimpleNaivePlanner.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Task\ITask.cs" />

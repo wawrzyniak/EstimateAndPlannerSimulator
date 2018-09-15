@@ -12,9 +12,11 @@ namespace EstimateSimulator.Task
 
     public class BasicTask : ITask
     {
+        private static int GlobalCounter = 1;
         public int EstimatedTime { get; set; }
         public int RealTime { get; set; }
         public int ElapsedTime { get; private set; }
+        private int _id;
         public bool Simulate(int step)
         {
             ElapsedTime += step;
@@ -22,6 +24,17 @@ namespace EstimateSimulator.Task
                 return true;
             else
                 return false;
+        }
+
+        public BasicTask()
+        {
+            _id = GlobalCounter;
+            GlobalCounter++;
+        }
+
+        public override int GetHashCode()
+        {
+            return _id.GetHashCode();
         }
     }
 }

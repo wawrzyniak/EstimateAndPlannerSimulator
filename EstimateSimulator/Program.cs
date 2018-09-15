@@ -18,7 +18,7 @@ namespace EstimateSimulator
            // temp.ParseCSVCoeffData(@"C:\Users\wawrzyiak\Documents\dupa");
             ManagerConfig config = new ManagerConfig();
             config.SimulationInterval = 1;
-            config.NumberOfWorkers = 4;
+            config.NumberOfWorkers = 2;
             var sources = new List<string>();
             sources.Add(@"D:\doktorat\junit412.csv");
             config.DataSources = sources;

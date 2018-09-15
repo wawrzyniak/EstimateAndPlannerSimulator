@@ -29,19 +29,34 @@ namespace EstimateSimulator.Manager
         public void RunSimulation()
         {
             bool isthereAnyTask = true;
-            while (isthereAnyTask || !_taskCreator.IsEmpty())
+            var tasks = _taskCreator.GetTasks(150);
+            TaskCreatorOnNewTasks(tasks);
+            foreach (var worker in _workers)
             {
-                Console.Write(".");
-                var tasks = _taskCreator.GetTasks(150);
-                TaskCreatorOnNewTasks(tasks);
-   
-                for (int i = 0; i < 200; i++)
+                if (!worker.Value.IsWorking)
                 {
-                    foreach (var worker in _workers)
-                    {
-                        worker.Value.DoWork();
-                    }
+                    WorkerEmpty();
                 }
+            }
+
+            foreach (var worker in _workers)
+            {
+                Console.WriteLine(worker.Value.ToString());
+            }
+
+            Console.Read();
+            while (isthereAnyTask)
+            {
+               // Console.Clear();
+              
+                
+             
+
+                foreach (var worker in _workers)
+                {
+                    worker.Value.DoWork();
+                }
+
                 isthereAnyTask = false;
                 foreach (var worker in _workers)
                 {
@@ -49,6 +64,8 @@ namespace EstimateSimulator.Manager
                     {
                         isthereAnyTask = true;
                     }
+                    else
+                        WorkerEmpty();
                 }
               
                 
@@ -58,6 +75,7 @@ namespace EstimateSimulator.Manager
             {
                 Console.WriteLine("Worker numer: " + worker.Value.WorkerId);
                 Console.WriteLine(worker.Value.Stats.ToString());
+                Console.WriteLine(worker.Value.Stats.ErrorList.Average());
                 Console.WriteLine("***************");
             }
             Console.ReadKey();
@@ -67,7 +85,7 @@ namespace EstimateSimulator.Manager
 
         void PreparePlanner()
         {
-            _planner = new SimpleNaivePlanner();
+            _planner = new DynamicPlanner();
         }
         private void FillData()
         {
@@ -119,12 +137,27 @@ namespace EstimateSimulator.Manager
            var plan =  _planner.PreparePlan(info, taskList);
             DoPlan(plan);
 
-            if(taskList.Count()>0)
+     
+
+        }
+        private void WorkerEmpty()
+        {
+            var info = new WorkerInfo();
             foreach (var worker in _workers)
             {
-                Console.WriteLine(worker.Value.GetTimeToEnd());
+                int val = worker.Value.GetTimeToEnd();
+                if (val < 0)
+                    val = -1 * val;
+                info.WorkersTimeToEnd.Add(worker.Key, val);
             }
+            info.NumberOfWorker = _workers.Count;
+
+            var plan = _planner.RecaulculatePlan(info);
+            DoPlan(plan);
+
+
 
         }
     }
 }
+

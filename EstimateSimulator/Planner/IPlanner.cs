@@ -9,47 +9,108 @@ namespace EstimateSimulator.Planner
     public interface IPlanner
     {
         IPlan PreparePlan(WorkerInfo workerInfo, IEnumerable<ITask> taskList);
-        IPlan RecaulculatePlan(WorkerInfo workerInfo, IEnumerable<ITask> taskList);
+        IPlan RecaulculatePlan(WorkerInfo workerInfo);
     }
 
-    public class SimpleNaivePlanner : IPlanner
+    public class DynamicPlanner : IPlanner
     {
+        private LinkedList<ITask> _taskList;
+
+        public DynamicPlanner()
+        {
+            _taskList = new LinkedList<ITask>();
+        }
         public IPlan PreparePlan(WorkerInfo workerInfo, IEnumerable<ITask> taskList)
         {
-            Dictionary< int, int> workersTime =new Dictionary<int,int>(workerInfo.WorkersTimeToEnd);
-            var plan = new BasicPlan();
-            var tasks = new List<ITask>(taskList);
-            tasks.Sort(new TaskComparer());
-            foreach (var task in tasks)
+            foreach (var task in taskList)
             {
-                var minIndex = GetMin(workersTime);
-                plan.Plan.Add(task,minIndex);
-                workersTime[minIndex] += task.EstimatedTime;
+                _taskList.AddLast(task);
             }
+            BasicPlan plan = new BasicPlan();
+
+                int currentWorker = workerInfo.GetMinWorker();
+            
+                ITask result = null;
+                int min = Int32.MaxValue;
+                foreach (var task in _taskList)
+                {
+                    int singlefitnessval = FitnessFunction(workerInfo, currentWorker, task);
+                    if (singlefitnessval < min)
+                    {
+                        min = singlefitnessval;
+                        result = task;
+                    }
+
+                }
+
+            if (result != null)
+            {
+                Console.WriteLine("Winner: " + result.ToString() + " MIN: " + min);
+                plan.Plan.Add(result, currentWorker);
+                _taskList.Remove(result);
+            }
+            
+        
+
+
+
+
+
+
+
+            return plan;
+
+        }
+
+        public IPlan RecaulculatePlan(WorkerInfo workerInfo)
+        {
+            BasicPlan plan = new BasicPlan();
+
+            int currentWorker = workerInfo.GetMinWorker();
+            ITask result = null;
+            int min = Int32.MaxValue;
+            foreach (var task in _taskList)
+            {
+                int singlefitnessval = FitnessFunction(workerInfo, currentWorker, task);
+                if (singlefitnessval < min)
+                {
+                    min = singlefitnessval;
+                    result = task;
+                }
+
+            }
+
+            if (result != null)
+            {
+                Console.WriteLine("Winner: " + result.ToString() + " MIN: " + min);
+                plan.Plan.Add(result, currentWorker);
+                _taskList.Remove(result);
+            }
+
+
+
+
+
+
+
 
             return plan;
         }
 
-        public IPlan RecaulculatePlan(WorkerInfo workerInfo, IEnumerable<ITask> taskList)
+        private int FitnessFunction(WorkerInfo workerInfo, int currentIndex, ITask toAdd)
         {
-            throw new System.NotImplementedException();
-        }
+            var tempInfo =  new WorkerInfo(workerInfo);
 
-        private int GetMin(Dictionary<int, int> workersTime)
-        {
-            int min = Int32.MaxValue;
-            int toret = 0;
-            foreach (var i in workersTime)
+            tempInfo.WorkersTimeToEnd[currentIndex] += toAdd.EstimatedTime;
+            int max = tempInfo.WorkersTimeToEnd.Max(x => x.Value);
+            int sum = 0;
+            foreach (var val in tempInfo.WorkersTimeToEnd.Values)
             {
-                if (i.Value < min)
-                {
-                    min = i.Value;
-                    toret = i.Key;
-                }
-                    
-
+                sum = sum + (max - val);
             }
-            return toret;
+
+
+            return sum;
         }
     }
 
