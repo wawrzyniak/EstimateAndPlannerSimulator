@@ -15,6 +15,7 @@ namespace EstimateSimulator.Workers
         int WorkerId { get; }
         void PushTask(ITask task);
         void DoWork();
+        ITask GetTaskInProgress();
         
         int GetTimeToEnd();
     }
@@ -67,6 +68,15 @@ namespace EstimateSimulator.Workers
                 }
             }
     
+        }
+
+        public ITask GetTaskInProgress()
+        {
+            if (_queue.Count == 0)
+            {
+                return null;
+            }
+            else return _queue.Peek();
         }
 
         public int GetTimeToEnd()

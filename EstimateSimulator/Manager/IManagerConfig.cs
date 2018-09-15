@@ -8,7 +8,8 @@ namespace EstimateSimulator.Manager
         int NumberOfWorkers { get; }
         int SimulationInterval { get; }
 
-        IEnumerable<Tuple<string,string>> DataSources { get; }
+        IEnumerable<string> DataSources { get; }
+        string EstimateDataSource { get; }
         
     }
 }

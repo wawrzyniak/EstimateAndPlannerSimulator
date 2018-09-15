@@ -10,8 +10,7 @@ namespace EstimateSimulator.Manager
     {
         public int NumberOfWorkers { get; set; }
         public int SimulationInterval { get; set; }
-       public IEnumerable<Tuple<string, string>> DataSources { get; set; }
-
-       
+       public IEnumerable<string> DataSources { get; set; }
+        public string EstimateDataSource { get; set; }
     }
 }

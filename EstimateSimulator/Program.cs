@@ -19,9 +19,11 @@ namespace EstimateSimulator
             ManagerConfig config = new ManagerConfig();
             config.SimulationInterval = 1;
             config.NumberOfWorkers = 4;
-            var sources = new List<Tuple<string, string>>();
-            sources.Add(new Tuple<string, string>(@"D:\doktorat\junit412.csv", @"C:\Users\wawrzyiak\Documents\dupa"));
+            var sources = new List<string>();
+            sources.Add(@"D:\doktorat\junit412.csv");
             config.DataSources = sources;
+            config.EstimateDataSource = @"C:\Users\wawrzyiak\Documents\dupa";
+         
 
             var manager = new Manager.Manager(config);
             manager.RunSimulation();

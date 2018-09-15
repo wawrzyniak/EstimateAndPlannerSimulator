@@ -78,8 +78,8 @@ namespace EstimateSimulator.Manager
                 var temp = new DataFromCsv();
                 temp.DataId = i;
                 i++;
-                temp.ParseCSVData(dataSource.Item1);
-                temp.ParseCSVCoeffData(dataSource.Item2);
+                temp.ParseCSVData(dataSource);
+                temp.ParseCSVCoeffData(_config.EstimateDataSource);
                 data.Add(temp);
             }
             _data = data;
