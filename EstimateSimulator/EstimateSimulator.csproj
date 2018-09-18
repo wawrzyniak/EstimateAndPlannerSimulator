@@ -33,9 +33,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="MathNet.Numerics, Version=4.5.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MathNet.Numerics.4.5.1\lib\net40\MathNet.Numerics.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -48,9 +53,12 @@
     <Compile Include="Data\DataFromCsv.cs" />
     <Compile Include="Data\IData.cs" />
     <Compile Include="Functions\IEstimator.cs" />
+    <Compile Include="Functions\LMEstimator.cs" />
+    <Compile Include="Functions\testmath.cs" />
     <Compile Include="Manager\IManagerConfig.cs" />
     <Compile Include="Manager\Manager.cs" />
     <Compile Include="Manager\ManagerConfig.cs" />
+    <Compile Include="Planner\DynamicPlanner.cs" />
     <Compile Include="Planner\IPlan.cs" />
     <Compile Include="Planner\IPlanner.cs" />
     <Compile Include="Planner\SimpleNaivePlanner.cs" />
@@ -63,6 +71,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

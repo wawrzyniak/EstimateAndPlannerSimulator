@@ -10,6 +10,7 @@ namespace EstimateSimulator.Manager
 
         IEnumerable<string> DataSources { get; }
         string EstimateDataSource { get; }
-        
+   
+
     }
 }

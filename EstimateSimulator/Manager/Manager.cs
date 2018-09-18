@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EstimateSimulator.Data;
+using EstimateSimulator.Functions;
 using EstimateSimulator.Planner;
 using EstimateSimulator.Task;
 using EstimateSimulator.Workers;
@@ -13,6 +14,7 @@ namespace EstimateSimulator.Manager
     public class Manager
     {
         Dictionary<int, IWorker> _workers;
+        private IEstimator _estimator;
         IPlanner _planner;
         ITaskCreator _taskCreator;
         private IManagerConfig _config;
@@ -20,6 +22,7 @@ namespace EstimateSimulator.Manager
         public Manager(IManagerConfig config)
         {
             _config = config;
+            
             FillData();
             PrepareWorkers();
             PrepareTaskCreator();
@@ -85,7 +88,7 @@ namespace EstimateSimulator.Manager
 
         void PreparePlanner()
         {
-            _planner = new DynamicPlanner();
+            _planner = new DynamicPlanner(_estimator);
         }
         private void FillData()
         {
@@ -101,7 +104,35 @@ namespace EstimateSimulator.Manager
                 data.Add(temp);
             }
             _data = data;
+            PrepareEstimator();
         }
+
+        private void PrepareEstimator()
+        {
+            _estimator = new LMEstimator();
+   
+            //liczmy stddev
+
+            double sum = 0;
+            double howmany = 0;
+            foreach (var data in _data)
+            {
+                _estimator.SetCoeffs(data.GetCoeffsData());
+                foreach (DataEntry dataEntry in data.GetData())
+                {
+                    
+                    double real = dataEntry.GetValue("TIME");
+                    double esti = _estimator.EstimateValue(dataEntry);
+                    double temp = Math.Pow((real - esti),2);
+                    sum += temp;
+                    howmany += 1.0;
+                }
+            }
+
+            double std = sum / (howmany - 2);
+            _estimator.SetStd(std);
+        }
+
 
         private void PrepareWorkers()
         {
@@ -113,7 +144,8 @@ namespace EstimateSimulator.Manager
         }
         private void PrepareTaskCreator()
         {
-            _taskCreator = new BaseTaskCreator(_data);
+          
+            _taskCreator = new BaseTaskCreator(_data,_estimator);
     
         }
 

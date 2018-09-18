@@ -59,10 +59,10 @@ namespace EstimateSimulator.Task
         //  public event NewTasks NewTasks;
         private IEnumerable<IData> _data;
         private Queue<ITask> _allTasks;
-        public BaseTaskCreator(IEnumerable<IData> data)
+        public BaseTaskCreator(IEnumerable<IData> data, IEstimator estimator)
         {
             _data = data;
-            _estimator = new LMEstimator();
+            _estimator = estimator;
             PrepareTasks();
         }
 

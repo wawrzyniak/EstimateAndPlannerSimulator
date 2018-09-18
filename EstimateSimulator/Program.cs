@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using EstimateSimulator.Data;
+using EstimateSimulator.Functions;
 using EstimateSimulator.Manager;
 
 namespace EstimateSimulator
@@ -12,6 +13,8 @@ namespace EstimateSimulator
     {
         static void Main(string[] args)
         {
+           // var tt = new testmath();
+          //  tt.test();
           //  var temp = new DataFromCsv();
           //  temp.ParseCSVData(@"D:\doktorat\junit412.csv");
 

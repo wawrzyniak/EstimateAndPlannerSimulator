@@ -12,5 +12,6 @@ namespace EstimateSimulator.Manager
         public int SimulationInterval { get; set; }
        public IEnumerable<string> DataSources { get; set; }
         public string EstimateDataSource { get; set; }
+  
     }
 }
